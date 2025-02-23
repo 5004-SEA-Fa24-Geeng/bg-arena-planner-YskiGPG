@@ -6,21 +6,189 @@ This document is meant to provide a tool for you to demonstrate the design proce
 
 ## (INITIAL DESIGN): Class Diagram 
 
-Place your class diagrams below. Make sure you check the file in the browser on github.com to make sure it is rendering correctly. If it is not, you will need to fix it. As a reminder, here is a link to tools that can help you create a class diagram: [Class Resources: Class Design Tools](https://github.com/CS5004-khoury-lionelle/Resources?tab=readme-ov-file#uml-design-tools)
+Place your class diagrams below. Make sure you check the file in the browser on github.com to make sure it is rendering correctly. If it is not, you will need to fix it. As a reminder, here is a link to tools that can help you create a class diagram: [Class Resources: Class Design Tools
 
 ### Provided Code
 
 Provide a class diagram for the provided code as you read through it.  For the classes you are adding, you will create them as a separate diagram, so for now, you can just point towards the interfaces for the provided code diagram.
 
+```mermaid
+classDiagram
+    IGameList <|-- GameList
+    IPlanner <|-- Planner
+    BoardGame --> GameData
+    GameList --> BoardGame : stores
+    ConsoleApp --> IGameList : uses
+    ConsoleApp --> IPlanner : uses
+    GamesLoader --> BoardGame : loads
+    Planner --> BoardGame : filters
+    Planner --> Operations : uses
+    Operations --> GameData : operates on
+    GameData : <<enum>> columns
+class IGameList{
+    <<interface>>
+    +List<String> getGameNames()
+    +void clear()
+    +int count()
+    +void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+}
 
+class IPlanner{
+    <<interface>>
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+}
+
+class BoardGame{
+    -String name
+    -int id
+    -int minPlayers
+    -int maxPlayers
+    -int minPlayTime
+    -int maxPlayTime
+    -double difficulty
+    -int rank
+    -double averageRating
+    -int yearPublished
+    +BoardGame(String name, int id, int minPlayers, int maxPlayers, int minPlayTime, int maxPlayTime, double difficulty, int rank, double averageRating, int yearPublished)
+    +String getName()
+    +int getId()
+    +int getMinPlayers()
+    +int getMaxPlayers()
+    +int getMinPlayTime()
+    +int getMaxPlayTime()
+    +double getDifficulty()
+    +int getRank()
+    +double getRating()
+    +int getYearPublished()
+    +String toString()
+    +boolean equals(Object obj)
+    +int hashCode()
+}
+
+class GamesLoader{
+    +Set<BoardGame> loadGamesFile(String filename)
+    +BoardGame toBoardGame(String line, Map<GameData, Integer> columnMap)
+    +Map<GameData, Integer> processHeader(String header)
+}
+
+class ConsoleApp{
+    +ConsoleApp(IGameList gameList, IPlanner planner)
+    +void start()
+    +void processHelp()
+    +void processFilter()
+    +void printCurrentList()
+    +void processListCommands()
+    +void randomNumber()
+    +ConsoleText nextCommand()
+    +String remainder()
+}
+
+class Planner{
+		-Set<BoardGame> allGames
+		-List<Stream<BoardGame>> appliedFilters
+    +Planner(Set<BoardGame> games)
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+    -Stream<BoardGame> applyFilter(String filter, GameData sortOn, boolean ascending)
+}
+
+class GameList{
+		-Set<BoardGame> selectedGames
+		+List<String> getGameNames()
+		+void clear()
+		+int count()
+		+void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+}
+
+class Operations{
+    <<enum>>
+    +EQUALS
+    +NOT_EQUALS
+    +GREATER_THAN
+    +LESS_THAN
+    +GREATER_THAN_EQUALS
+    +LESS_THAN_EQUALS
+    +CONTAINS
+    +String getOperator()
+    +Operations fromOperator(String operator)
+    +Operations getOperatorFromStr(String str)
+}
+
+class GameData{
+    <<enum>>
+    +NAME
+    +ID
+    +RATING
+    +DIFFICULTY
+    +RANK
+    +MIN_PLAYERS
+    +MAX_PLAYERS
+    +MIN_TIME
+    +MAX_TIME
+    +YEAR
+    +String getColumnName()
+    +GameData fromString(String name)
+    +GameData fromColumnName(String columnName)
+}
+```
 
 ### Your Plans/Design
 
 Create a class diagram for the classes you plan to create. This is your initial design, and it is okay if it changes. Your starting points are the interfaces. 
 
+```mermaid
+classDiagram
+    IGameList <|-- GameList
+    IPlanner <|-- Planner
 
+class IPlanner{
+    <<interface>>
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+}
 
+class IGameList{
+    <<interface>>
+    +List<String> getGameNames()
+    +void clear()
+    +int count()
+    +void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+}
 
+class Planner{
+		-Set<BoardGame> allGames
+		-List<Stream<BoardGame>> appliedFilters
+    +Planner(Set<BoardGame> games)
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+    -Stream<BoardGame> applyFilter(String filter, GameData sortOn, boolean ascending)
+}
+
+class GameList{
+		-Set<BoardGame> selectedGames
+		+List<String> getGameNames()
+		+void clear()
+		+int count()
+		+void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+}
+```
 
 ## (INITIAL DESIGN): Tests to Write - Brainstorm
 
@@ -36,10 +204,26 @@ Write a test (in english) that you can picture for the class diagram you have cr
 
 You should feel free to number your brainstorm. 
 
-1. Test 1..
-2. Test 2..
+For Planner：
 
+1. Test 1: Filters games by name ("Go").
+1. Test 2: Filters games based on a minimum rating of `8.0`.
+1. Test 3: Filters games based on their year of release (greater than or equal to 2005).
+1. Test 4: Sorts games by rating in ascending order.
+1. Test 5: Filters games by multiple conditions using AND logic (e.g., minPlayers >= 2 and maxPlayers <= 6).
+1. Test 6: Resets all filters and ensures no filters are applied.
+1. Test 7: Handles invalid filters and throws an exception.
+1. Test 8: Filters and sorts games by difficulty in descending order.
 
+For GameList:
+
+1. Test 1: Ensures that a game is correctly added to the list.
+2. Test 2: Verifies that a game can be removed from the list.
+3. Test 3: Ensures the list is cleared when `clear()` is called.
+4. Test 4: Verifies that the list can be saved correctly to a file.
+5. Test 5: Ensures that `count()` returns the correct number of games in the list.
+6. Test 6: Ensures that removing a non-existent game throws an exception.
+7. Test 7: Ensures that no duplicate games are added to the list.
 
 
 ## (FINAL DESIGN): Class Diagram
