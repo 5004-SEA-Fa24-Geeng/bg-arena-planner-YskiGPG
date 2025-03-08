@@ -39,6 +39,37 @@ public class TestPlanner {
         assertEquals(1, filtered.size());
         assertEquals("Go", filtered.get(0).getName());
     }
-    
 
+    // Test for Numeric Filters
+    @Test
+    public void testFilterMinPlayers() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("minPlayers > 2").toList();
+
+        // Verify at least one game meets the criteria
+        assertEquals(3, filtered.size());  // Adjust based on expected results
+//        assertEquals("Chess", filtered.get(0).getName());  // Ensure sorting is correct
+    }
+
+    @Test
+    public void testFilterMaxPlayers() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("maxPlayers <= 5").toList();
+        assertEquals(2, filtered.size()); // Adjust expected count based on data
+    }
+
+    @Test
+    public void testFilterPlayingTime() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("maxplayTime <= 50").toList();
+        assertEquals(3, filtered.size()); // Adjust expected count based on data
+    }
+
+    @Test
+    public void testFilterYearPublished() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("yearPublished == 2002").toList();
+        assertEquals(1, filtered.size());
+        assertEquals(2002, filtered.get(0).getYearPublished());
+    }
 }

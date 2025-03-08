@@ -19,7 +19,6 @@ public class Planner implements IPlanner {
 
     @Override
     public Stream<BoardGame> filter(String filter) {
-//        throw new UnsupportedOperationException("Unimplemented method 'filter'");
         // return Stream<BoardGame>
         // "name == Go"
         Stream<BoardGame> filteredStream = filterSingle(filter, games.stream());
@@ -38,6 +37,7 @@ public class Planner implements IPlanner {
         if (parts.length != 2) {
             return filteredGames;
         }
+
         GameData column;
         try {
             column = GameData.fromString(parts[0]);
@@ -51,14 +51,15 @@ public class Planner implements IPlanner {
         } catch (IllegalArgumentException e) {
             return filteredGames;
         }
-        System.out.print("Operator is :" + operator);
-        System.out.print("GameData is :" + column);
-        System.out.print("Value is :" + value);
+        System.out.println("Operator is :" + operator);
+        System.out.println("GameData is :" + column);
+        System.out.println("Value is :" + value);
         // more work here to filter the games
         // we found creating a String filter and a Number filter to be useful.
         // both of the them take in both the GameData enum, Operator Enum, and the value to parse and filter on.
         List<BoardGame> filteredGameList = filteredGames.filter(game ->
                 Filters.filter(game, column, operator, value)).toList();
+        System.out.println("FilteredGameList is :" + filteredGameList);
         return filteredGameList.stream();
     }
 

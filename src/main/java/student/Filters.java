@@ -8,10 +8,25 @@ public class Filters {
                                  Operations op, String value) {
         switch (column) {
             case NAME:
-                // filter the name
                 return filterString(game.getName(), op, value);
+            case MIN_PLAYERS:
+                return filterNum(game.getMinPlayers(), op, value);
             case MAX_PLAYERS:
-
+                return filterNum(game.getMaxPlayers(), op, value);
+            case MIN_TIME:
+                return filterNum(game.getMinPlayTime(), op, value);
+            case MAX_TIME:
+                return filterNum(game.getMaxPlayTime(), op, value);
+            case YEAR:
+                return filterNum(game.getYearPublished(), op, value);
+            case RANK:
+                return filterNum(game.getRank(), op, value);
+            case RATING:
+                return filterDouble(game.getRating(), op, value);
+            case DIFFICULTY:
+                return filterDouble(game.getDifficulty(), op, value);
+            case ID:
+                return filterNum(game.getId(), op, value);
             default:
                 return false;
         }
@@ -38,6 +53,32 @@ public class Filters {
         int value;
         try {
             value = Integer.parseInt(valueStr);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        switch (op) {
+            case EQUALS:
+                return gameData == value;
+            case NOT_EQUALS:
+                return gameData != value;
+            case GREATER_THAN:
+                return gameData > value;
+            case LESS_THAN:
+                return gameData < value;
+            case GREATER_THAN_EQUALS:
+                return gameData >= value;
+            case LESS_THAN_EQUALS:
+                return gameData <= value;
+            default:
+                return false;
+        }
+    }
+
+    private static boolean filterDouble(double gameData, Operations op, String valueStr) {
+        double value;
+        try {
+            value = Double.parseDouble(valueStr);
         } catch (NumberFormatException e) {
             return false;
         }
