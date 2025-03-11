@@ -36,26 +36,35 @@ public class GameList implements IGameList {
     @Override
     public void saveGame(String filename) {
         if (filename == null || filename.trim().isEmpty()) {
-            filename = "games_list.txt";  // Default filename
+            filename = "temp/games.txt";  // Force it to save to temp/games.txt
         }
 
-        // Debug: Print the current working directory
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));
-
         File file = new File(filename);
-        System.out.println("Attempting to save at: " + file.getAbsolutePath());
+        File parentDir = file.getParentFile();
+
+        // Ensure the directory exists
+        if (parentDir != null && !parentDir.exists()) {
+            boolean dirCreated = parentDir.mkdirs();  // Create directories
+            if (!dirCreated) {
+                System.err.println("Failed to create directory: " + parentDir.getAbsolutePath());
+                throw new RuntimeException("Error creating directory for: " + filename);
+            }
+        }
+
+        System.out.println("Saving to: " + file.getAbsolutePath());
 
         try (PrintWriter writer = new PrintWriter(file)) {
             for (String name : getGameNames()) {
                 writer.println(name);
             }
-            System.out.println("Game list saved successfully to: " + file.getAbsolutePath());
+            System.out.println("Game list saved successfully to: " + filename);
         } catch (Exception e) {
             System.err.println("Failed to save game list: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error saving game list to file: " + filename, e);
         }
     }
+
 
 
 
