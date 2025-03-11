@@ -9,13 +9,15 @@ import java.util.stream.Stream;
 
 
 public class Planner implements IPlanner {
-
+    /** stores the unfiltered set of board games permanently */
+    private final Set<BoardGame> originalGames;
     private final Set<BoardGame> games;  // Declare an instance variable to store the board games
 
     public Planner(Set<BoardGame> games) {
         // TODO Auto-generated method stub
 //        throw new UnsupportedOperationException("Unimplemented constructor 'Planner'");
         this.games = games;  // Initialize the games set in the constructor
+        this.originalGames = games; // Store the original data
     }
 
     @Override
@@ -93,9 +95,7 @@ public class Planner implements IPlanner {
 
     @Override
     public void reset() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reset'");
+        games.clear();
+        games.addAll(originalGames);
     }
-
-
 }

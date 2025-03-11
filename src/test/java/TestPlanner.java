@@ -2,6 +2,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import student.BoardGame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -103,5 +105,27 @@ public class TestPlanner {
         List<BoardGame> sortedGames = planner.filter("", GameData.RATING, false).toList();
         assertEquals(10.0, sortedGames.get(0).getRating()); // Highest rating first
         assertEquals(5.0, sortedGames.get(sortedGames.size() - 1).getRating()); // Lowest rating last
+    }
+
+    @Test
+    public void testResetAfterFiltering() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("maxPlayers < 6").toList();
+        assertNotEquals(games.size(), filtered.size()); // Ensure filtering reduces the set
+
+        planner.reset();
+        List<BoardGame> resetGames = planner.filter("", GameData.NAME, true).toList();
+        assertEquals(games.size(), resetGames.size()); // Ensure reset restores the original data
+    }
+
+    @Test
+    public void testResetAfterSorting() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> sortedGames = planner.filter("", GameData.YEAR, false).toList();
+        assertEquals(2007, sortedGames.get(0).getYearPublished()); // Sorted order
+
+        planner.reset();
+        List<BoardGame> resetGames = planner.filter("", GameData.NAME, true).toList();
+        assertEquals(games.size(), resetGames.size()); // Ensure reset restores the original set size
     }
 }
