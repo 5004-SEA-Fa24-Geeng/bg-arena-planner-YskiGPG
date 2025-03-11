@@ -36,7 +36,7 @@ public class Filters {
         if (gameData == null || value == null) {
             return false;
         }
-        System.out.println("Comparing: '" + gameData + "' with '" + value + "'");
+//        System.out.println("Comparing: '" + gameData + "' with '" + value + "'");
         switch (op) {
             case EQUALS:
                 return gameData.equalsIgnoreCase(value); // Case-insensitive equality

@@ -27,7 +27,9 @@ public class Planner implements IPlanner {
     public Stream<BoardGame> filter(String filter) {
         // Apply filter on previously filtered results instead of games.stream()
         Stream<BoardGame> filteredStream = filterSingle(filter, appliedFilter.stream());
-        appliedFilter = filteredStream.collect(Collectors.toList()); // Store filtered result
+        appliedFilter = filteredStream
+                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
         return appliedFilter.stream();
     }
 
@@ -66,8 +68,6 @@ public class Planner implements IPlanner {
                 .collect(Collectors.toList())
                 .stream();
     }
-
-
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
