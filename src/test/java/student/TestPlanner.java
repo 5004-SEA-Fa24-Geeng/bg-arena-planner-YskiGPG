@@ -61,9 +61,9 @@ public class TestPlanner {
     @Test
     public void testFilterNameContainsNumeric() {
         IPlanner planner = new Planner(games);
-        List<BoardGame> filtered = planner.filter("name ~= 7").toList();
+        List<BoardGame> filtered = planner.filter(" name ~= go fish ").toList();
         assertEquals(1, filtered.size());
-        assertEquals("17 days", filtered.get(0).getName());
+        assertEquals("Go Fish", filtered.get(0).getName());
     }
 
     @Test

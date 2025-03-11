@@ -31,11 +31,13 @@ public class Planner implements IPlanner {
 
     private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames) {
         Operations operator = Operations.getOperatorFromStr(filter);
+        System.out.println("Filter Operation: " + operator);
         if (operator == null) {
             return filteredGames;
         }
 
-        filter = filter.replaceAll(" ", ""); // Remove spaces
+//        filter = filter.replaceAll(" ", ""); // Remove spaces
+        filter = filter.trim(); // Keep spaces inside the value
 
         String[] parts = filter.split(operator.getOperator());
         if (parts.length != 2) {
@@ -44,24 +46,25 @@ public class Planner implements IPlanner {
 
         GameData column;
         try {
-            column = GameData.fromString(parts[0]);
+            column = GameData.fromString(parts[0].trim());
         } catch (IllegalArgumentException e) {
+            System.out.println("Filter Column: " + parts[0]);
             return filteredGames;
         }
 
-        String value;
-        try {
-            value = parts[1].trim();
-        } catch (IllegalArgumentException e) {
-            return filteredGames;
-        }
+        String value = parts[1].trim();
 
-        List<BoardGame> filteredGameList = filteredGames
-                .filter(game -> Filters.filter(game, column, operator, value))
-                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER)) // Sorting added
-                .collect(Collectors.toList());
+        // 🔍 Debug Output:
+        System.out.println("Filter Operation: " + operator);
+        System.out.println("Filtering Column: " + column);
+        System.out.println("Filter Value: " + value);
 
-        return filteredGameList.stream();
+        return filteredGames.filter(game -> {
+            boolean result = Filters.filter(game, column, operator, value);
+            // 🔍 Debug each game's filtering result:
+            System.out.println("Checking: " + game.getName() + " -> " + result);
+            return result;
+        });
     }
 
 

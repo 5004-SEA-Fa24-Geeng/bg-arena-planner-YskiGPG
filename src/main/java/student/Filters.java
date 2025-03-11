@@ -36,14 +36,14 @@ public class Filters {
         if (gameData == null || value == null) {
             return false;
         }
+        System.out.println("Comparing: '" + gameData + "' with '" + value + "'");
         switch (op) {
             case EQUALS:
-                // case insensitive
-                return gameData.equalsIgnoreCase(value);
+                return gameData.equalsIgnoreCase(value); // Case-insensitive equality
             case NOT_EQUALS:
                 return !gameData.equalsIgnoreCase(value);
             case CONTAINS:
-                return gameData.toLowerCase().contains(value.toLowerCase());
+                return gameData.toLowerCase().contains(value.toLowerCase()); // Ensure proper substring match
             default:
                 return false;
         }
