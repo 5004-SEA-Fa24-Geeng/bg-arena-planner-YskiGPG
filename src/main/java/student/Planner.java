@@ -1,40 +1,38 @@
 package student;
 
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 public class Planner implements IPlanner {
-    /** stores the unfiltered set of board games permanently */
+    /** Stores the unfiltered set of board games permanently */
     private final Set<BoardGame> originalGames;
-    private final Set<BoardGame> games;  // Declare an instance variable to store the board games
+    private Set<BoardGame> games;  // Declare an instance variable to store the board games
+    private List<BoardGame> appliedFilter; // Stores the progressively filtered results
 
     public Planner(Set<BoardGame> games) {
-        // TODO Auto-generated method stub
-//        throw new UnsupportedOperationException("Unimplemented constructor 'Planner'");
-        this.games = games;  // Initialize the games set in the constructor
-        this.originalGames = games; // Store the original data
+        this.games = games;
+        this.originalGames = games;
+        this.appliedFilter = games.stream().collect(Collectors.toList()); // Start with all games
     }
 
     @Override
     public Stream<BoardGame> filter(String filter) {
-        // return Stream<BoardGame>
-        // "name == Go"
-        Stream<BoardGame> filteredStream = filterSingle(filter, games.stream());
-        return filteredStream;
+        // Apply filter on previously filtered results instead of games.stream()
+        Stream<BoardGame> filteredStream = filterSingle(filter, appliedFilter.stream());
+        appliedFilter = filteredStream.collect(Collectors.toList()); // Store filtered result
+        return appliedFilter.stream();
     }
 
-    private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames){
+    private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames) {
         Operations operator = Operations.getOperatorFromStr(filter);
         if (operator == null) {
             return filteredGames;
         }
-        // remove spaces
-        filter = filter.replaceAll(" ", "");
+
+        filter = filter.replaceAll(" ", ""); // Remove spaces
 
         String[] parts = filter.split(operator.getOperator());
         if (parts.length != 2) {
@@ -46,31 +44,25 @@ public class Planner implements IPlanner {
             column = GameData.fromString(parts[0]);
         } catch (IllegalArgumentException e) {
             return filteredGames;
-
         }
+
         String value;
         try {
             value = parts[1].trim();
         } catch (IllegalArgumentException e) {
             return filteredGames;
         }
-        System.out.println("Operator is :" + operator);
-        System.out.println("GameData is :" + column);
-        System.out.println("Value is :" + value);
-        // more work here to filter the games
-        // we found creating a String filter and a Number filter to be useful.
-        // both of the them take in both the GameData enum, Operator Enum, and the value to parse and filter on.
-        List<BoardGame> filteredGameList = filteredGames.filter(game ->
-                Filters.filter(game, column, operator, value)).toList();
-        System.out.println("FilteredGameList is :" + filteredGameList);
+
+        List<BoardGame> filteredGameList = filteredGames
+                .filter(game -> Filters.filter(game, column, operator, value))
+                .collect(Collectors.toList());
+
         return filteredGameList.stream();
     }
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
-        Stream<BoardGame> filteredStream = filterSingle(filter, games.stream());
-
-        // Sort based on whether it's a name (String) or a numeric attribute
+        Stream<BoardGame> filteredStream = filter(filter);
         return filteredStream.sorted((game1, game2) -> {
             if (sortOn == GameData.NAME) {
                 return game1.getName().compareToIgnoreCase(game2.getName());
@@ -84,18 +76,17 @@ public class Planner implements IPlanner {
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
-        Stream<BoardGame> filteredStream = filter(filter, sortOn);
+        Stream<BoardGame> sortedStream = filter(filter, sortOn);
         if (ascending) {
-            return filteredStream;
+            return sortedStream;
         }
-        List<BoardGame> list = filteredStream.collect(Collectors.toList());
+        List<BoardGame> list = sortedStream.collect(Collectors.toList());
         Collections.reverse(list);
         return list.stream();
     }
 
     @Override
     public void reset() {
-        games.clear();
-        games.addAll(originalGames);
+        appliedFilter = originalGames.stream().collect(Collectors.toList()); // Reset to original
     }
 }

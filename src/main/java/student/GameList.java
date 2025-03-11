@@ -7,14 +7,16 @@ import java.util.stream.Stream;
 
 public class GameList implements IGameList {
     private final Set<BoardGame> games;
+    private List<BoardGame> filteredGames;  // Stores current filtered games
 
     public GameList() {
         this.games = new HashSet<>();
+        this.filteredGames = new ArrayList<>(); // Initially empty
     }
 
     @Override
     public List<String> getGameNames() {
-        return games.stream()
+        return filteredGames.stream()
                 .map(BoardGame::getName)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
                 .collect(Collectors.toList());
@@ -22,12 +24,12 @@ public class GameList implements IGameList {
 
     @Override
     public void clear() {
-        games.clear();
+        filteredGames.clear();
     }
 
     @Override
     public int count() {
-        return games.size();
+        return filteredGames.size();
     }
 
     @Override
@@ -43,8 +45,8 @@ public class GameList implements IGameList {
 
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
-        List<BoardGame> filteredGames = filtered.collect(Collectors.toList());
-        games.addAll(parseGamesFromString(str, filteredGames));
+        List<BoardGame> selectedGames = parseGamesFromString(str, filtered.collect(Collectors.toList()));
+        filteredGames.addAll(selectedGames);
     }
 
     @Override
@@ -54,25 +56,21 @@ public class GameList implements IGameList {
             return;
         }
 
-        // Retrieve sorted list of games (case-insensitive)
-        List<BoardGame> sortedGames = games.stream()
-                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList());
-
-        // Parse the games to remove based on the sorted order
-        List<BoardGame> toRemove = parseGamesFromString(str, sortedGames);
-
-        // Remove selected games from the original set
-        games.removeAll(toRemove);
+        // Use the current filtered list
+        List<BoardGame> toRemove = parseGamesFromString(str, new ArrayList<>(filteredGames));
+        filteredGames.removeAll(toRemove);
     }
 
+    /**
+     * Updates the filtered games list based on a provided filter.
+     * This method should be called whenever filtering is applied.
+     */
+    public void applyFilter(Stream<BoardGame> filteredStream) {
+        filteredGames = filteredStream.collect(Collectors.toList());
+    }
 
     /**
      * Parses a string to extract a list of games based on a name, index, or range.
-     * @param str The input string (e.g., "1", "1-3", "Go").
-     * @param gameList The list of games to search in.
-     * @return The list of board games matching the parsed criteria.
-     * @throws IllegalArgumentException If the string format is invalid.
      */
     private List<BoardGame> parseGamesFromString(String str, List<BoardGame> gameList) throws IllegalArgumentException {
         if (str.equalsIgnoreCase(ADD_ALL)) {
