@@ -235,6 +235,59 @@ For the final design, you just need to do a single diagram that includes both th
 > [!WARNING]
 > If you resubmit your assignment for manual grading, this is a section that often needs updating. You should double check with every resubmit to make sure it is up to date.
 
+```mermaid
+classDiagram
+    IGameList <|-- GameList
+    IPlanner <|-- Planner
+    
+
+class IPlanner{
+    <<interface>>
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+}
+
+class IGameList{
+    <<interface>>
+    +List<String> getGameNames()
+    +void clear()
+    +int count()
+    +void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+}
+
+class Planner{
+		-Set<BoardGame> originalGames
+		-List<Stream<BoardGame>> appliedFilter
+    +Planner(Set<BoardGame> games)
+    +Stream<BoardGame> filter(String filter)
+    +Stream<BoardGame> filter(String filter, GameData sortOn)
+    +Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending)
+    +void reset()
+}
+
+class Filters{
+    +static boolean filter(BoardGame game, GameData column, Operations op, String value)
+    +static boolean filterString(String gameData, Operations op, String value)
+    +static boolean filterNumeric(Comparable gameData, Operations op, String value)
+    +static Comparable<?> getColumnValue(BoardGame game, GameData column)
+}
+
+class GameList{
+		-List<BoardGame> filteredGames
+		+List<String> getGameNames()
+		+void clear()
+		+int count()
+		+void saveGame(String filename)
+    +void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException
+    +void removeFromList(String str) throws IllegalArgumentException
+    -List<BoardGame> parseGamesFromString(String str, List<BoardGame> gameList) throws IllegalArgumentException
+}
+```
+
 
 
 
@@ -245,3 +298,11 @@ For the final design, you just need to do a single diagram that includes both th
 > The value of reflective writing has been highly researched and documented within computer science, from learning to information to showing higher salaries in the workplace. For this next part, we encourage you to take time, and truly focus on your retrospective.
 
 Take time to reflect on how your design has changed. Write in *prose* (i.e. do not bullet point your answers - it matters in how our brain processes the information). Make sure to include what were some major changes, and why you made them. What did you learn from this process? What would you do differently next time? What was the most challenging part of this process? For most students, it will be a paragraph or two. 
+
+While working on the Board Game Arena Planner, my design changed a lot as I figured out better ways to make everything work together. At first, I just focused on getting the basic features in place, but as I tested things, I saw that some parts didn’t work as well as I expected. One big change was in the `Planner` class. At first, every time I applied a filter, it started from the full game list again. This was a problem because filters were supposed to stack on top of each other. I fixed this by keeping track of the current filtered games so that each new filter only applied to the previous results.
+
+Another change happened in `GameList`. At first, I stored the selected games in a `Set`, but that didn’t keep the games in order. Since the program needed to list games alphabetically, I switched to using a sorted list instead. This made sure that adding, removing, and displaying games worked in a way that made sense to the user. I also improved the `Filters` class by combining similar methods, so the code was cleaner and easier to understand.
+
+Through this process, I learned that planning ahead saves a lot of time. If I had thought more about how filtering should work before coding, I wouldn’t have had to go back and rewrite big parts of my program. Next time, I would spend more time designing and testing small parts before building everything at once. The hardest part was making sure that filtering and sorting behaved exactly as expected. Some bugs, like filters not stacking properly or games appearing in the wrong order, were tricky to find and fix.
+
+In the end, I’m happy with how much I improved the design. I realized that coding is not just about making something work, but making it work in a way that’s clear, efficient, and easy to maintain. Even though I had to make a lot of changes, each one made my program better.
