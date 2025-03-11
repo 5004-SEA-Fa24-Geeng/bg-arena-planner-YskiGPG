@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GameList implements IGameList {
-    private final Set<BoardGame> games;
+//    private final Set<BoardGame> games;
     private List<BoardGame> filteredGames;  // Stores current filtered games
 
     public GameList() {
-        this.games = new HashSet<>();
+//        this.games = new HashSet<>();
         this.filteredGames = new ArrayList<>(); // Initially empty
     }
 
