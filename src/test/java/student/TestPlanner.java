@@ -33,12 +33,36 @@ public class TestPlanner {
         games.add(new BoardGame("Tucano", 5, 10, 20, 60, 90, 6.0, 500, 8.0, 2004));
     }
 
-     @Test
+    @Test
     public void testFilterName() {
         IPlanner planner = new Planner(games);
         List<BoardGame> filtered = planner.filter("name == Go").toList();
         assertEquals(1, filtered.size());
         assertEquals("Go", filtered.get(0).getName());
+    }
+
+    @Test
+    public void testFilterNameContains() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("name ~= Go", GameData.NAME, true).toList();
+        assertEquals(4, filtered.size());
+        assertEquals("Go", filtered.get(0).getName());
+    }
+
+    @Test
+    public void testFilterNameContainsNumeric() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("name ~= 7").toList();
+        assertEquals(1, filtered.size());
+        assertEquals("17 days", filtered.get(0).getName());
+    }
+
+    @Test
+    public void testFilterNameContainsIgnoreCase() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> filtered = planner.filter("name ~= zzz").toList();
+        assertEquals(0, filtered.size());
+//        assertEquals("17 days", filtered.get(0).getName());
     }
 
     // Test for Numeric Filters
