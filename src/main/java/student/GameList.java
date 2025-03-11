@@ -1,5 +1,6 @@
 package student;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,14 +35,27 @@ public class GameList implements IGameList {
 
     @Override
     public void saveGame(String filename) {
+        System.out.println("Before processing filename: '" + filename + "'");
+
+        // If no filename is provided, use the default "games_list.txt"
+        if (filename == null || filename.trim().isEmpty()) {
+            filename = "games_list.txt";
+        }
+        System.out.println("Saving to: " + new File(filename).getAbsolutePath());
+
         try (PrintWriter writer = new PrintWriter(filename)) {
             for (String name : getGameNames()) {
                 writer.println(name);
             }
+            System.out.println("Game list saved successfully to: " + filename); // Debug output
         } catch (Exception e) {
-            throw new RuntimeException("Error saving game list to file", e);
+            System.err.println("Failed to save game list: " + e.getMessage()); // Print actual error
+            e.printStackTrace(); // Debugging
+            throw new RuntimeException("Error saving game list to file: " + filename, e);
         }
     }
+
+
 
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
