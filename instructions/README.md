@@ -1,10 +1,7 @@
 # Board Game Area - Game Planner
 
 This assignment is focused on allowing the client build a list of games they want
-to try out on Board Game Arena. Most of the application was already built  by the previous
-intern who left the company, and you are being asked to finish the application. In the
-end you will have a working program that can help you figure out what
-board games to play on Board Game Arena.
+to try out on Board Game Arena. Most of the application was already built  by the previous intern who left the company, and you are being asked to finish the application. In the end you will have a working program that can help you figure out what board games to play on Board Game Arena.
 
 
 ## Learning Objectives
@@ -18,8 +15,7 @@ board games to play on Board Game Arena.
 
 ## Instructions
 
-For this assignment, you will be implementing [IGameList](src/main/java/student/IGameList.java) interface. This interface is used to represent a list of games that a user wants to play on Board Game Arena. You will also be implementing the [IPlanner](src/main/java/student/IPlanner.java) interface which is used to help filter the BGArena games into smaller lists, so
-they can be added to the GameList. Both of them have classes already associated with them [GameList](src/main/java/student/GameList.java) and [Planner](src/main/java/student/Planner.java) respectively. This was to make sure you used the correct constructors.
+For this assignment, you will be implementing [IGameList](src/main/java/student/IGameList.java) interface. This interface is used to represent a list of games that a user wants to play on Board Game Arena. You will also be implementing the [IPlanner](src/main/java/student/IPlanner.java) interface which is used to help filter the BGArena games into smaller lists, so they can be added to the GameList. Both of them have classes already associated with them [GameList](src/main/java/student/GameList.java) and [Planner](src/main/java/student/Planner.java) respectively. This was to make sure you used the correct constructors.
 
 > [!IMPORTANT]
 > Just because we provided the base class does NOT mean all the functions you need are there. Just the public ones that are part of the interface. In our solution, we added multiple additional classes for this program as support / utility classes, and multiple private methods to each class! 
@@ -34,14 +30,14 @@ We suggest that for Module 05 - you implement the GameList, and some of the Plan
 > We have included a sample completed program you can try out. No promise that it is
 > 100% bullet proof, and probably some typos, but you can get the idea
 > of how the final program works. If you go into the sample_working directory, you can run the program with the following command:
+>
 > ```console
 > bin/bg_arena_planner
->    or if windows
+> or if windows
 > bin\bg_arena_planner.bat
 > ```
 > Both commands will execute the .jar file in the lib directory while properly setting the path. For macOS and linux, 
 > you may need to add the execute permission to the file (`chmod +x bin/bg_arena_planner`). 
-
 
 ### :fire: Task 1: Design 
 
@@ -100,7 +96,7 @@ Note: you often don't know all the tests as you write. As such, it is alright to
 
 > [!WARNING]
 > If you modify one of our files, you need to add tests for it. If you do not modify a provided file, you don't need to add tests. This can be done without modifying our provided code, but you are welcome to modify it (except for the caveat about IGameList and IPlanner) if it fits your overall design better. 
- 
+
 ### :fire: Task 3: Finish Design Document
 
 By this point, your design has probably changed (very few people have perfect designs the first iteration). Update your design document with the final design in the "final design" section. We want to see the history of your first design to your final design. That is a good thing. 
