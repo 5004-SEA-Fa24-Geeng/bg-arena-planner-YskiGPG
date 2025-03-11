@@ -1,6 +1,7 @@
 package student;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,10 +58,12 @@ public class Planner implements IPlanner {
 
         List<BoardGame> filteredGameList = filteredGames
                 .filter(game -> Filters.filter(game, column, operator, value))
+                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER)) // Sorting added
                 .collect(Collectors.toList());
 
         return filteredGameList.stream();
     }
+
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
