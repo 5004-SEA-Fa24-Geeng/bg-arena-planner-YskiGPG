@@ -137,7 +137,9 @@ public class GameList implements IGameList {
 
         if (str.matches("\\d+")) { // Single index
             int index = Integer.parseInt(str) - 1;
-            if (index < 0 || index >= gameList.size()) throw new IllegalArgumentException("Invalid index");
+            if (index < 0 || index >= gameList.size()) {
+                throw new IllegalArgumentException("Invalid index");
+            }
             return List.of(gameList.get(index));
         }
 
@@ -145,8 +147,9 @@ public class GameList implements IGameList {
             String[] parts = str.split("-");
             int start = Integer.parseInt(parts[0]) - 1;
             int end = Integer.parseInt(parts[1]) - 1;
-            if (start < 0 || end >= gameList.size() || start > end)
+            if (start < 0 || end >= gameList.size() || start > end) {
                 throw new IllegalArgumentException("Invalid range");
+            }
             return gameList.subList(start, end + 1);
         }
 
@@ -154,7 +157,9 @@ public class GameList implements IGameList {
         Optional<BoardGame> game = gameList.stream()
                 .filter(g -> g.getName().equalsIgnoreCase(str))
                 .findFirst();
-        if (game.isEmpty()) throw new IllegalArgumentException("Game not found in list");
+        if (game.isEmpty()) {
+            throw new IllegalArgumentException("Game not found in list");
+        }
 
         return List.of(game.get());
     }
