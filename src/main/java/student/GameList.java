@@ -53,9 +53,19 @@ public class GameList implements IGameList {
             clear();
             return;
         }
-        List<BoardGame> toRemove = parseGamesFromString(str, new ArrayList<>(games));
+
+        // Retrieve sorted list of games (case-insensitive)
+        List<BoardGame> sortedGames = games.stream()
+                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
+
+        // Parse the games to remove based on the sorted order
+        List<BoardGame> toRemove = parseGamesFromString(str, sortedGames);
+
+        // Remove selected games from the original set
         games.removeAll(toRemove);
     }
+
 
     /**
      * Parses a string to extract a list of games based on a name, index, or range.
