@@ -44,6 +44,17 @@ public class Filters {
                 return !gameData.equalsIgnoreCase(value);
             case CONTAINS:
                 return gameData.toLowerCase().contains(value.toLowerCase()); // Ensure proper substring match
+            case GREATER_THAN:
+                return gameData.compareToIgnoreCase(value) > 0;  // Alphabetically greater
+
+            case LESS_THAN:
+                return gameData.compareToIgnoreCase(value) < 0;  // Alphabetically smaller
+
+            case GREATER_THAN_EQUALS:
+                return gameData.compareToIgnoreCase(value) >= 0; // Alphabetically greater or equal
+
+            case LESS_THAN_EQUALS:
+                return gameData.compareToIgnoreCase(value) <= 0; // Alphabetically smaller or equal
             default:
                 return false;
         }
