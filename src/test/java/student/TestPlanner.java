@@ -13,9 +13,9 @@ import java.util.Set;
 
 /**
  * JUnit test for the Planner class.
- * 
+ * <p>
  * Just a sample test to get you started, also using
- * setup to help out. 
+ * setup to help out.
  */
 public class TestPlanner {
     static Set<BoardGame> games;

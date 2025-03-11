@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Planner implements IPlanner {
-    /** Stores the unfiltered set of board games permanently */
+    /**
+     * Stores the unfiltered set of board games permanently
+     */
     private final Set<BoardGame> originalGames;
-//    private Set<BoardGame> games;  // Declare an instance variable to store the board games
+    //    private Set<BoardGame> games;  // Declare an instance variable to store the board games
     private List<BoardGame> appliedFilter; // Stores the progressively filtered results
 
     public Planner(Set<BoardGame> games) {
