@@ -1,15 +1,14 @@
+package student;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import student.BoardGame;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import student.Planner;
-import student.IPlanner;
-import student.GameData;
 
 
 /**
