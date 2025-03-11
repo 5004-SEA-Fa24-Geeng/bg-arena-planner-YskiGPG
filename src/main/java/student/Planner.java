@@ -12,7 +12,9 @@ public class Planner implements IPlanner {
      * Stores the unfiltered set of board games permanently
      */
     private final Set<BoardGame> originalGames;
-    //    private Set<BoardGame> games;  // Declare an instance variable to store the board games
+    /**
+     * Stores the progressively filtered results
+     */
     private List<BoardGame> appliedFilter; // Stores the progressively filtered results
 
     public Planner(Set<BoardGame> games) {
@@ -36,7 +38,6 @@ public class Planner implements IPlanner {
             return filteredGames;
         }
 
-//        filter = filter.replaceAll(" ", ""); // Remove spaces
         filter = filter.trim(); // Keep spaces inside the value
 
         String[] parts = filter.split(operator.getOperator());
@@ -59,13 +60,19 @@ public class Planner implements IPlanner {
         System.out.println("Filtering Column: " + column);
         System.out.println("Filter Value: " + value);
 
-        return filteredGames.filter(game -> {
-            boolean result = Filters.filter(game, column, operator, value);
-            // 🔍 Debug each game's filtering result:
-            System.out.println("Checking: " + game.getName() + " -> " + result);
-            return result;
-        });
+        List<BoardGame> filteredList = filteredGames
+                .filter(game -> {
+                    boolean result = Filters.filter(game, column, operator, value);
+                    // 🔍 Debug each game's filtering result:
+                    System.out.println("Checking: " + game.getName() + " -> " + result);
+                    return result;
+                })
+                .sorted((game1, game2) -> String.CASE_INSENSITIVE_ORDER.compare(game1.getName(), game2.getName())) // Ensure sorting
+                .collect(Collectors.toList());
+
+        return filteredList.stream();
     }
+
 
 
     @Override
