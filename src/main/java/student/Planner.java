@@ -34,39 +34,46 @@ public class Planner implements IPlanner {
     }
 
     private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames) {
-        Operations operator = Operations.getOperatorFromStr(filter);
-//        System.out.println("Filter Operation: " + operator);
-        if (operator == null) {
-            return filteredGames;
-        }
+        // Split by ',' to handle multiple filters
+        String[] conditions = filter.split(",");
 
-        filter = filter.trim(); // Keep spaces inside the value
+        for (String condition : conditions) {
+            condition = condition.trim();  // Trim each filter condition
 
-        String[] parts = filter.split(operator.getOperator());
-        if (parts.length != 2) {
-            return filteredGames;
-        }
+            Operations operator = Operations.getOperatorFromStr(condition);
+            if (operator == null) {
+                continue;  // Skip invalid filters
+            }
 
-        GameData column;
-        try {
-            column = GameData.fromString(parts[0].trim());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Filter Column: " + parts[0]);
-            return filteredGames;
-        }
+            String[] parts = condition.split(operator.getOperator());
+            if (parts.length != 2) {
+                continue;  // Skip malformed filters
+            }
 
-        String value = parts[1].trim();
+            GameData column;
+            try {
+                column = GameData.fromString(parts[0].trim());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Filter Column: " + parts[0]);
+                continue;  // Skip invalid column names
+            }
 
-        // 🔍 Debug Output:
+            String value = parts[1].trim();
+
+            // Debugging Output
 //        System.out.println("Filter Operation: " + operator);
 //        System.out.println("Filtering Column: " + column);
 //        System.out.println("Filter Value: " + value);
 
+            // Apply the filter to the stream
+            filteredGames = filteredGames.filter(game -> Filters.filter(game, column, operator, value));
+        }
+
+        // Ensure sorting before returning results
         return filteredGames
-                .filter(game -> Filters.filter(game, column, operator, value))
                 .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList())
-                .stream();
+                .collect(Collectors.toList())  // Collect back to list
+                .stream(); // Convert back to Stream
     }
 
     @Override
