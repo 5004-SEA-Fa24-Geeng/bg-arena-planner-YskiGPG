@@ -72,4 +72,36 @@ public class TestPlanner {
         assertEquals(1, filtered.size());
         assertEquals(2002, filtered.get(0).getYearPublished());
     }
+
+    @Test
+    public void testSortByYearPublishedDescending() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> sortedGames = planner.filter("", GameData.YEAR, false).toList();
+        assertEquals(2007, sortedGames.get(0).getYearPublished()); // Ensure first is the most recent year
+        assertEquals(2000, sortedGames.get(sortedGames.size() - 1).getYearPublished()); // Ensure last is the oldest year
+    }
+
+    @Test
+    public void testSortByNameAscending() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> sortedGames = planner.filter("", GameData.NAME, true).toList();
+        assertEquals("17 days", sortedGames.get(0).getName()); // Ensure first game alphabetically
+        assertEquals("Tucano", sortedGames.get(sortedGames.size() - 1).getName()); // Ensure last game alphabetically
+    }
+
+    @Test
+    public void testSortByMaxPlayersAscending() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> sortedGames = planner.filter("maxPlayers <= 15", GameData.MAX_PLAYERS, true).toList();
+        assertEquals(2, sortedGames.get(0).getMaxPlayers()); // Smallest maxPlayers first
+        assertEquals(10, sortedGames.get(sortedGames.size() - 1).getMaxPlayers()); // Largest maxPlayers last
+    }
+
+    @Test
+    public void testSortByRatingDescending() {
+        IPlanner planner = new Planner(games);
+        List<BoardGame> sortedGames = planner.filter("", GameData.RATING, false).toList();
+        assertEquals(10.0, sortedGames.get(0).getRating()); // Highest rating first
+        assertEquals(5.0, sortedGames.get(sortedGames.size() - 1).getRating()); // Lowest rating last
+    }
 }

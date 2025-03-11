@@ -100,4 +100,31 @@ public class Filters {
                 return false;
         }
     }
+
+    public static Comparable<?> getColumnValue(BoardGame game, GameData column) {
+        switch (column) {
+            case NAME:
+                return game.getName();
+            case MIN_PLAYERS:
+                return game.getMinPlayers();
+            case MAX_PLAYERS:
+                return game.getMaxPlayers();
+            case MIN_TIME:
+                return game.getMinPlayTime();
+            case MAX_TIME:
+                return game.getMaxPlayTime();
+            case YEAR:
+                return game.getYearPublished();
+            case RANK:
+                return game.getRank();
+            case RATING:
+                return game.getRating();
+            case DIFFICULTY:
+                return game.getDifficulty();
+            case ID:
+                return game.getId();
+            default:
+                throw new IllegalArgumentException("Unsupported column: " + column);
+        }
+    }
 }

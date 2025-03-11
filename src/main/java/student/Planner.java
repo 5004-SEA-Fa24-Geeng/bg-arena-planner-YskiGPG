@@ -1,6 +1,7 @@
 package student;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,14 +66,29 @@ public class Planner implements IPlanner {
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'filter'");
+        Stream<BoardGame> filteredStream = filterSingle(filter, games.stream());
+
+        // Sort based on whether it's a name (String) or a numeric attribute
+        return filteredStream.sorted((game1, game2) -> {
+            if (sortOn == GameData.NAME) {
+                return game1.getName().compareToIgnoreCase(game2.getName());
+            } else {
+                Comparable<Object> value1 = (Comparable<Object>) Filters.getColumnValue(game1, sortOn);
+                Comparable<Object> value2 = (Comparable<Object>) Filters.getColumnValue(game2, sortOn);
+                return value1.compareTo(value2);
+            }
+        });
     }
 
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'filter'");
+        Stream<BoardGame> filteredStream = filter(filter, sortOn);
+        if (ascending) {
+            return filteredStream;
+        }
+        List<BoardGame> list = filteredStream.collect(Collectors.toList());
+        Collections.reverse(list);
+        return list.stream();
     }
 
     @Override
