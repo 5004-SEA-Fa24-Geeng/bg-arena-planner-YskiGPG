@@ -33,7 +33,7 @@ public class Planner implements IPlanner {
 
     private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames) {
         Operations operator = Operations.getOperatorFromStr(filter);
-        System.out.println("Filter Operation: " + operator);
+//        System.out.println("Filter Operation: " + operator);
         if (operator == null) {
             return filteredGames;
         }
@@ -56,21 +56,15 @@ public class Planner implements IPlanner {
         String value = parts[1].trim();
 
         // 🔍 Debug Output:
-        System.out.println("Filter Operation: " + operator);
-        System.out.println("Filtering Column: " + column);
-        System.out.println("Filter Value: " + value);
+//        System.out.println("Filter Operation: " + operator);
+//        System.out.println("Filtering Column: " + column);
+//        System.out.println("Filter Value: " + value);
 
-        List<BoardGame> filteredList = filteredGames
-                .filter(game -> {
-                    boolean result = Filters.filter(game, column, operator, value);
-                    // 🔍 Debug each game's filtering result:
-                    System.out.println("Checking: " + game.getName() + " -> " + result);
-                    return result;
-                })
-                .sorted((game1, game2) -> String.CASE_INSENSITIVE_ORDER.compare(game1.getName(), game2.getName())) // Ensure sorting
-                .collect(Collectors.toList());
-
-        return filteredList.stream();
+        return filteredGames
+                .filter(game -> Filters.filter(game, column, operator, value))
+                .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList())
+                .stream();
     }
 
 
