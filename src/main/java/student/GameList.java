@@ -46,8 +46,14 @@ public class GameList implements IGameList {
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
         List<BoardGame> selectedGames = parseGamesFromString(str, filtered.collect(Collectors.toList()));
-        filteredGames.addAll(selectedGames);
+
+        for (BoardGame game : selectedGames) {
+            if (!filteredGames.contains(game)) {  // Only add if not already in the list
+                filteredGames.add(game);
+            }
+        }
     }
+
 
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
