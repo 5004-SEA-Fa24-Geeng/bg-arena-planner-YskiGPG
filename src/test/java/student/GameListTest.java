@@ -122,4 +122,5 @@ class GameListTest {
         gameList.addToList("all", games.stream()); // Add all games first
         assertThrows(IllegalArgumentException.class, () -> gameList.removeFromList("NonExistentGame"));
     }
+
 }

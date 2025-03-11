@@ -45,9 +45,18 @@ public class TestPlanner {
     public void testFilterNameContains() {
         IPlanner planner = new Planner(games);
         List<BoardGame> filtered = planner.filter("name ~= Go", GameData.NAME, true).toList();
-        assertEquals(4, filtered.size());
-        assertEquals("Go", filtered.get(0).getName());
+
+        assertEquals(4, filtered.size(), "Expected 4 games with 'Go' in the name.");
+
+        // Expected order based on alphabetical sorting (case-insensitive)
+        List<String> expectedOrder = List.of("Go", "Go Fish", "golang", "GoRami");
+
+        // Extract actual names from filtered games
+        List<String> actualOrder = filtered.stream().map(BoardGame::getName).toList();
+
+        assertEquals(expectedOrder, actualOrder, "Filtered game names should be sorted alphabetically.");
     }
+
 
     @Test
     public void testFilterNameContainsNumeric() {

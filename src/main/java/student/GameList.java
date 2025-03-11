@@ -19,9 +19,11 @@ public class GameList implements IGameList {
     public List<String> getGameNames() {
         return filteredGames.stream()
                 .map(BoardGame::getName)
-                .sorted(Comparator.comparing(String::toLowerCase, String.CASE_INSENSITIVE_ORDER)) // Ensure case-insensitive sorting
+                .sorted(Comparator.comparing((String name) -> name.toLowerCase()) // Ensure case-insensitive sorting
+                        .thenComparing(name -> name)) // Ensures stable sorting
                 .collect(Collectors.toList());
     }
+
 
 
     @Override
