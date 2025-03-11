@@ -1,11 +1,25 @@
 package student;
 
-public class Filters {
+/**
+ * Utility class for filtering board games based on different criteria.
+ * This class provides methods to filter games by name, numerical values, or double values.
+ */
+public final class Filters {
+
+    /** Private constructor to prevent instantiation. */
     private Filters() {
     }
 
-    public static boolean filter(BoardGame game, GameData column,
-                                 Operations op, String value) {
+    /**
+     * Filters a BoardGame based on the specified column, operation, and value.
+     *
+     * @param game  The BoardGame object to filter.
+     * @param column The column of the game to filter on.
+     * @param op     The operation to apply (e.g., EQUALS, GREATER_THAN).
+     * @param value  The value to compare against.
+     * @return true if the game matches the filter condition, false otherwise.
+     */
+    public static boolean filter(BoardGame game, GameData column, Operations op, String value) {
         switch (column) {
             case NAME:
                 return filterString(game.getName(), op, value);
@@ -32,34 +46,47 @@ public class Filters {
         }
     }
 
+    /**
+     * Filters a string-based game attribute based on the specified operation and value.
+     *
+     * @param gameData The game attribute as a string.
+     * @param op       The comparison operation.
+     * @param value    The value to compare against.
+     * @return true if the game attribute matches the filter condition, false otherwise.
+     */
     public static boolean filterString(String gameData, Operations op, String value) {
         if (gameData == null || value == null) {
             return false;
         }
-//        System.out.println("Comparing: '" + gameData + "' with '" + value + "'");
+
         switch (op) {
             case EQUALS:
-                return gameData.equalsIgnoreCase(value); // Case-insensitive equality
+                return gameData.equalsIgnoreCase(value);
             case NOT_EQUALS:
                 return !gameData.equalsIgnoreCase(value);
             case CONTAINS:
-                return gameData.toLowerCase().contains(value.toLowerCase()); // Ensure proper substring match
+                return gameData.toLowerCase().contains(value.toLowerCase());
             case GREATER_THAN:
-                return gameData.compareToIgnoreCase(value) > 0;  // Alphabetically greater
-
+                return gameData.compareToIgnoreCase(value) > 0;
             case LESS_THAN:
-                return gameData.compareToIgnoreCase(value) < 0;  // Alphabetically smaller
-
+                return gameData.compareToIgnoreCase(value) < 0;
             case GREATER_THAN_EQUALS:
-                return gameData.compareToIgnoreCase(value) >= 0; // Alphabetically greater or equal
-
+                return gameData.compareToIgnoreCase(value) >= 0;
             case LESS_THAN_EQUALS:
-                return gameData.compareToIgnoreCase(value) <= 0; // Alphabetically smaller or equal
+                return gameData.compareToIgnoreCase(value) <= 0;
             default:
                 return false;
         }
     }
 
+    /**
+     * Filters an integer-based game attribute based on the specified operation and value.
+     *
+     * @param gameData The game attribute as an integer.
+     * @param op       The comparison operation.
+     * @param valueStr The string representation of the value to compare against.
+     * @return true if the game attribute matches the filter condition, false otherwise.
+     */
     private static boolean filterNum(int gameData, Operations op, String valueStr) {
         int value;
         try {
@@ -86,6 +113,14 @@ public class Filters {
         }
     }
 
+    /**
+     * Filters a double-based game attribute based on the specified operation and value.
+     *
+     * @param gameData The game attribute as a double.
+     * @param op       The comparison operation.
+     * @param valueStr The string representation of the value to compare against.
+     * @return true if the game attribute matches the filter condition, false otherwise.
+     */
     private static boolean filterDouble(double gameData, Operations op, String valueStr) {
         double value;
         try {
@@ -112,6 +147,14 @@ public class Filters {
         }
     }
 
+    /**
+     * Retrieves the value of a specified column from a BoardGame object.
+     *
+     * @param game   The BoardGame object.
+     * @param column The column whose value should be retrieved.
+     * @return The value of the specified column.
+     * @throws IllegalArgumentException if the column is unsupported.
+     */
     public static Comparable<?> getColumnValue(BoardGame game, GameData column) {
         switch (column) {
             case NAME:

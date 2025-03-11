@@ -6,18 +6,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents a list of board games with functionality to filter, save, add, and remove games.
+ */
 public class GameList implements IGameList {
-    //    private final Set<BoardGame> games;
-    /**
-     * Stores current filtered games
-     */
-    private List<BoardGame> filteredGames;  // Stores current filtered games
+    /** Stores current filtered games. */
+    private List<BoardGame> filteredGames;
 
+    /**
+     * Constructs an empty GameList.
+     */
     public GameList() {
-//        this.games = new HashSet<>();
-        this.filteredGames = new ArrayList<>(); // Initially empty
+        this.filteredGames = new ArrayList<>();
     }
 
+    /**
+     * Retrieves a sorted list of game names.
+     *
+     * @return A list of game names in sorted order.
+     */
     @Override
     public List<String> getGameNames() {
         return filteredGames.stream()
@@ -27,62 +34,74 @@ public class GameList implements IGameList {
                 .collect(Collectors.toList());
     }
 
-
-
+    /**
+     * Clears the list of filtered games.
+     */
     @Override
     public void clear() {
         filteredGames.clear();
     }
 
+    /**
+     * Retrieves the count of filtered games.
+     *
+     * @return The number of games in the list.
+     */
     @Override
     public int count() {
         return filteredGames.size();
     }
 
+    /**
+     * Saves the game list to a file.
+     *
+     * @param filename The file path to save the list.
+     */
     @Override
     public void saveGame(String filename) {
         if (filename == null || filename.trim().isEmpty()) {
-            filename = "temp/games.txt";  // Force it to save to temp/games.txt
+            filename = "temp/games.txt";
         }
 
         File file = new File(filename);
         File parentDir = file.getParentFile();
 
-        // Ensure the directory exists
-        if (parentDir != null && !parentDir.exists()) {
-            boolean dirCreated = parentDir.mkdirs();  // Create directories
-            if (!dirCreated) {
-                System.err.println("Failed to create directory: " + parentDir.getAbsolutePath());
-                throw new RuntimeException("Error creating directory for: " + filename);
-            }
+        if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
+            throw new RuntimeException("Error creating directory for: " + filename);
         }
-
-        System.out.println("Saving to: " + file.getAbsolutePath());
 
         try (PrintWriter writer = new PrintWriter(file)) {
             for (String name : getGameNames()) {
                 writer.println(name);
             }
-            System.out.println("Game list saved successfully to: " + filename);
         } catch (Exception e) {
-            System.err.println("Failed to save game list: " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException("Error saving game list to file: " + filename, e);
         }
     }
 
+    /**
+     * Adds games to the list based on a string filter.
+     *
+     * @param str      The filter criteria (index, range, or name).
+     * @param filtered The stream of board games to select from.
+     * @throws IllegalArgumentException If the filter is invalid.
+     */
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
         List<BoardGame> selectedGames = parseGamesFromString(str, filtered.collect(Collectors.toList()));
-
         for (BoardGame game : selectedGames) {
-            if (!filteredGames.contains(game)) {  // Only add if not already in the list
+            if (!filteredGames.contains(game)) {
                 filteredGames.add(game);
             }
         }
     }
 
-
+    /**
+     * Removes games from the list based on a string filter.
+     *
+     * @param str The filter criteria (index, range, or name).
+     * @throws IllegalArgumentException If the filter is invalid.
+     */
     @Override
     public void removeFromList(String str) throws IllegalArgumentException {
         if (str.equalsIgnoreCase(ADD_ALL)) {
@@ -90,21 +109,26 @@ public class GameList implements IGameList {
             return;
         }
 
-        // Use the current filtered list
         List<BoardGame> toRemove = parseGamesFromString(str, new ArrayList<>(filteredGames));
         filteredGames.removeAll(toRemove);
     }
 
     /**
-     * Updates the filtered games list based on a provided filter.
-     * This method should be called whenever filtering is applied.
+     * Updates the filtered games list based on a provided stream.
+     *
+     * @param filteredStream The stream of filtered games.
      */
     public void applyFilter(Stream<BoardGame> filteredStream) {
         filteredGames = filteredStream.collect(Collectors.toList());
     }
 
     /**
-     * Parses a string to extract a list of games based on a name, index, or range.
+     * Parses a string filter to extract games based on a name, index, or range.
+     *
+     * @param str      The filter criteria.
+     * @param gameList The list of available games.
+     * @return A list of selected board games.
+     * @throws IllegalArgumentException If the filter is invalid.
      */
     private List<BoardGame> parseGamesFromString(String str, List<BoardGame> gameList) throws IllegalArgumentException {
         if (str.equalsIgnoreCase(ADD_ALL)) {

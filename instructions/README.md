@@ -129,3 +129,25 @@ Submit early because the autograder can provide you information on errors in you
 
 ### Autograder Limitation
 Currently the autograder is limited in how it can test. As such, when it comes across an error it just stops. This means that if you have multiple errors in your code, you may only see the first one. We are working on improving this, but for now, you will need to fix the first error, and then rerun the tests to see the next error. Eventually, if every test passes, you will get the single point. It also may give you points for valid style, while errors exist in the code - so really assume the first 2 points are done together. 
+
+```
+Filters.java:
+	line: 3, column1     - Class Filters should be declared as final. [com.puppycrawl.tools.checkstyle.checks.design.FinalClassCheck]
+	line: 7, column5     - Missing a Javadoc comment. [com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck]
+	line: 35, column5    - Missing a Javadoc comment. [com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck]
+	line: 115, column5   - Missing a Javadoc comment. [com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck]
+GameList.java:
+	line: 11             - First sentence should end with a period. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck]
+	line: 16, column5    - Missing a Javadoc comment. [com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck]
+	line: 102, column47  - Expected @param tag for 'filteredStream'. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck]
+	line: 109            - @return tag should be present and have description. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck]
+	line: 109, column57  - Expected @param tag for 'str'. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck]
+	line: 109, column78  - Expected @param tag for 'gameList'. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck]
+	line: 116, column13  - 'if' construct must use '{}'s. [com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck]
+	line: 124, column13  - 'if' construct must use '{}'s. [com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck]
+	line: 133, column9   - 'if' construct must use '{}'s. [com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck]
+Planner.java:
+	line: 11             - First sentence should end with a period. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck]
+	line: 15             - First sentence should end with a period. [com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck]
+	line: 20, column5    - Missing a Javadoc comment. [com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck]
+```

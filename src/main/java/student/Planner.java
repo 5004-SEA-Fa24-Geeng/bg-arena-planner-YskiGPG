@@ -7,25 +7,38 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Manages a collection of board games and applies filtering operations.
+ */
 public class Planner implements IPlanner {
     /**
-     * Stores the unfiltered set of board games permanently
+     * Stores the unfiltered set of board games permanently.
      */
     private final Set<BoardGame> originalGames;
-    /**
-     * Stores the progressively filtered results
-     */
-    private List<BoardGame> appliedFilter; // Stores the progressively filtered results
 
+    /**
+     * Stores the progressively filtered results.
+     */
+    private List<BoardGame> appliedFilter;
+
+    /**
+     * Constructs a Planner with the given set of board games.
+     *
+     * @param games The initial set of board games.
+     */
     public Planner(Set<BoardGame> games) {
-//        this.games = games;
         this.originalGames = games;
         this.appliedFilter = games.stream().collect(Collectors.toList()); // Start with all games
     }
 
+    /**
+     * Applies a filter to the list of board games.
+     *
+     * @param filter The filter condition to apply.
+     * @return A stream of board games after applying the filter.
+     */
     @Override
     public Stream<BoardGame> filter(String filter) {
-        // Apply filter on previously filtered results instead of games.stream()
         Stream<BoardGame> filteredStream = filterSingle(filter, appliedFilter.stream());
         appliedFilter = filteredStream
                 .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
@@ -33,21 +46,26 @@ public class Planner implements IPlanner {
         return appliedFilter.stream();
     }
 
+    /**
+     * Filters a stream of board games based on multiple conditions.
+     *
+     * @param filter The filter condition string.
+     * @param filteredGames The stream of board games to filter.
+     * @return A filtered stream of board games.
+     */
     private Stream<BoardGame> filterSingle(String filter, Stream<BoardGame> filteredGames) {
-        // Split by ',' to handle multiple filters
         String[] conditions = filter.split(",");
 
         for (String condition : conditions) {
-            condition = condition.trim();  // Trim each filter condition
-
+            condition = condition.trim();
             Operations operator = Operations.getOperatorFromStr(condition);
             if (operator == null) {
-                continue;  // Skip invalid filters
+                continue;
             }
 
             String[] parts = condition.split(operator.getOperator());
             if (parts.length != 2) {
-                continue;  // Skip malformed filters
+                continue;
             }
 
             GameData column;
@@ -55,27 +73,26 @@ public class Planner implements IPlanner {
                 column = GameData.fromString(parts[0].trim());
             } catch (IllegalArgumentException e) {
                 System.out.println("Filter Column: " + parts[0]);
-                continue;  // Skip invalid column names
+                continue;
             }
 
             String value = parts[1].trim();
-
-            // Debugging Output
-//        System.out.println("Filter Operation: " + operator);
-//        System.out.println("Filtering Column: " + column);
-//        System.out.println("Filter Value: " + value);
-
-            // Apply the filter to the stream
             filteredGames = filteredGames.filter(game -> Filters.filter(game, column, operator, value));
         }
 
-        // Ensure sorting before returning results
         return filteredGames
                 .sorted(Comparator.comparing(BoardGame::getName, String.CASE_INSENSITIVE_ORDER))
-                .collect(Collectors.toList())  // Collect back to list
-                .stream(); // Convert back to Stream
+                .collect(Collectors.toList())
+                .stream();
     }
 
+    /**
+     * Applies a filter and sorts the results based on a specific column.
+     *
+     * @param filter The filter condition string.
+     * @param sortOn The column to sort by.
+     * @return A sorted stream of board games.
+     */
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn) {
         Stream<BoardGame> filteredStream = filter(filter);
@@ -90,6 +107,14 @@ public class Planner implements IPlanner {
         });
     }
 
+    /**
+     * Applies a filter, sorts the results, and orders them based on the specified direction.
+     *
+     * @param filter The filter condition string.
+     * @param sortOn The column to sort by.
+     * @param ascending Whether the sort order should be ascending.
+     * @return A sorted and ordered stream of board games.
+     */
     @Override
     public Stream<BoardGame> filter(String filter, GameData sortOn, boolean ascending) {
         Stream<BoardGame> sortedStream = filter(filter, sortOn);
@@ -101,8 +126,11 @@ public class Planner implements IPlanner {
         return list.stream();
     }
 
+    /**
+     * Resets the filtered list to the original set of board games.
+     */
     @Override
     public void reset() {
-        appliedFilter = originalGames.stream().collect(Collectors.toList()); // Reset to original
+        appliedFilter = originalGames.stream().collect(Collectors.toList());
     }
 }
