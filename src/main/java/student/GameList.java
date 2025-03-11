@@ -19,9 +19,10 @@ public class GameList implements IGameList {
     public List<String> getGameNames() {
         return filteredGames.stream()
                 .map(BoardGame::getName)
-                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .sorted(Comparator.comparing(String::toLowerCase, String.CASE_INSENSITIVE_ORDER)) // Ensure case-insensitive sorting
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public void clear() {
@@ -64,10 +65,6 @@ public class GameList implements IGameList {
             throw new RuntimeException("Error saving game list to file: " + filename, e);
         }
     }
-
-
-
-
 
     @Override
     public void addToList(String str, Stream<BoardGame> filtered) throws IllegalArgumentException {
